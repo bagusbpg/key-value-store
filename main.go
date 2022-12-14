@@ -36,7 +36,7 @@ func main() {
 			w.WriteHeader(http.StatusMethodNotAllowed)
 			res, _ := json.Marshal(response{
 				Code:    http.StatusMethodNotAllowed,
-				Message: "invalid payload",
+				Message: "invalid method",
 			})
 			w.Write(res)
 			return
@@ -84,7 +84,7 @@ func main() {
 			w.WriteHeader(http.StatusMethodNotAllowed)
 			res, _ := json.Marshal(response{
 				Code:    http.StatusMethodNotAllowed,
-				Message: "invalid payload",
+				Message: "invalid method",
 			})
 			w.Write(res)
 			return
