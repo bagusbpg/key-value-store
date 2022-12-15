@@ -6,7 +6,7 @@ First, we need to install redis. The easiest way is by running the following scr
 ```bash
 docker run -d -p 6379:6379 --name redis redis
 ```
-You may also verivy that redis has been running with success using this command
+You may also verify that redis has been running well using this command
 ```bash
 docker exec -it redis bash
 ```
@@ -20,8 +20,7 @@ DEL key
 exit
 exit
 ```
-
-As usual, initiate your Golang project.
+As usual, proceed with initiating your Golang project.
 ```bash
 mkdir <your-project-directory>
 cd <your-project-directory>
@@ -31,7 +30,7 @@ And then install go-redis package.
 ```bash
 go get github.com/go-redis/redis/v9
 ```
-Go-redis v9 is to be used when your redis is of version 7.x.x, while go-redis v8 is for redis version 6.x.x. Note: you can check your installed redis' version from INFO command executed before.
+Go-redis v9 is to be used when your redis is of version 7.x.x, while go-redis v8 is for redis version 6.x.x. Note: you can check the version of your installed redis from INFO command executed before.
 
 In your service app, you need to create a redis client instance, specifying the address where redis is serving, password, and database. Sometime, you may also want to specify some other options as well, like what is the maximum number of idle connections should be allowed. In the following example, you can set such limit using `MaxIdleCons` option.
 ```go
@@ -44,12 +43,11 @@ rdb := redis.NewClient(&redis.Options{
 ```
 In this minimum setup, you are already able to implement key-value store using go-redis. In the following example, you can set some value to redis with expiration time of one minute, meaning that your stored value will be kept available to fetch for the next one minute since its creation.
 ```go
-expired := time.Now().Add(time.Minute)
 if err := rdb.Set(
     someContext,
     key,
     value,
-    time.Until(expired)
+    time.Minute,
 ).Err(); err != nil {
 	// error handling
 }
