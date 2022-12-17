@@ -12,8 +12,8 @@ import (
 )
 
 type setRequest struct {
-	Key   string `json:"key" validate:"required"`
-	Value string `json:"value" validate:"required"`
+	Key   string `json:"key"`
+	Value string `json:"value"`
 }
 
 type response struct {
@@ -56,7 +56,25 @@ func main() {
 		defer r.Body.Close()
 
 		var req setRequest
-		json.Unmarshal(payload, &req)
+		if err := json.Unmarshal(payload, &req); err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			res, _ := json.Marshal(response{
+				Code:    http.StatusBadRequest,
+				Message: fmt.Sprintf("failed to parse payload, cause: %v", err),
+			})
+			w.Write(res)
+			return
+		}
+
+		if req.Key == "" || req.Value == "" {
+			w.WriteHeader(http.StatusBadRequest)
+			res, _ := json.Marshal(response{
+				Code:    http.StatusBadRequest,
+				Message: fmt.Sprintf("key and value is required."),
+			})
+			w.Write(res)
+			return
+		}
 
 		expired := time.Now().Add(time.Minute)
 		if err := rdb.Set(r.Context(), req.Key, req.Value, time.Until(expired)).Err(); err != nil {
