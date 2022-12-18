@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/go-redis/redis/v9"
@@ -122,7 +121,7 @@ func main() {
 		key := queries["key"][0]
 		value, err := rdb.Get(r.Context(), key).Result()
 		if err != nil {
-			if strings.Contains(err.Error(), "nil") {
+			if err == redis.Nil {
 				w.WriteHeader(http.StatusBadRequest)
 				res, _ := json.Marshal(response{
 					Code:    http.StatusBadRequest,
