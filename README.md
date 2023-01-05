@@ -56,7 +56,7 @@ Fetching the stored value is also simple.
 ```go
 value, err := rdb.Get(someContext, key).Result()
 if err != nil {
-	if strings.Contains(err.Error(), "nil") {
+	if err == redis.Nil {
 		// error handling attributed to key not found (probably client error)
 	}
     // error handling attributed to internal server error
